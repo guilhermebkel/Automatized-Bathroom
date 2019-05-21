@@ -1,9 +1,10 @@
-// Initializes led
+// Initializes leds
 int redLed = 12;
 int greenLed = 11;
 
-int minDistance = 15; // Minimum distance for action in centimeters
-int delayBeforeActivation = 9; // Delay for activation in seconds
+int minDistance = 15; // Minimum distance for action - in centimeters
+int delayBeforeActivation = 9; // Delay for activation - in seconds
+int timeBetweenActivations = 5; // Time between activations on Unstoppable Mode - in seconds
 
 // Initializes the first Ultrassonic Sensor
 int ultrassonicEcho1 = 6;
@@ -73,7 +74,30 @@ void ultrassonicSensor(int trigger, int echo, int led, int minDistance, int dela
   }
 }
 
+void ultrassonicSensorUnstoppable(int led1, int led2, int delayBeforeActivation, int timeBetweenActivations){
+    Serial.println("Unstoppable mode actived, let's start counting:");
+    for(int i=0; i<delayBeforeActivation; i++){
+      Serial.println(i);
+      digitalWrite(led1, HIGH);
+      digitalWrite(led2, HIGH);
+      delay(500);
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      delay(500);
+    }
+  
+    Serial.println("Flushing!");
+    digitalWrite(led1, HIGH);
+    digitalWrite(led2, HIGH);
+    delay(5000);
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+    Serial.println("Finished!\n"); 
+    delay(1000*timeBetweenActivations); 
+}
+
 void loop() {
   ultrassonicSensor(ultrassonicTrigger1, ultrassonicEcho1, greenLed, minDistance, delayBeforeActivation, 1);
   ultrassonicSensor(ultrassonicTrigger2, ultrassonicEcho2, redLed, minDistance, delayBeforeActivation, 2);
+  //ultrassonicSensorUnstoppable(redLed, greenLed, delayBeforeActivation, timeBetweenActivations);
 }
