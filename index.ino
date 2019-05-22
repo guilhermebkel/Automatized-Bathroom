@@ -1,12 +1,12 @@
+int minDistance = 25; // Minimum distance for action - in centimeters
+int delayBeforeActivation = 15; // Delay for activation - in seconds
+int flushDuration = 5; // Flush action duration - in seconds
+
 // Initializes leds
 int redLedPin = 12;
 int redLedState = LOW;
 int greenLedPin = 11;
 int greenLedState = LOW;
-
-int minDistance = 25; // Minimum distance for action - in centimeters
-int delayBeforeActivation = 15; // Delay for activation - in seconds
-int flushDuration = 5; // Flush action duration - in seconds
 
 // Initializes the first Ultrasonic Sensor
 int ultrasonicEcho1 = 6;
