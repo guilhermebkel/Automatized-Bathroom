@@ -8,13 +8,19 @@ int redLedState = LOW;
 int greenLedPin = 11;
 int greenLedState = LOW;
 
+// Initializes the first PIR Sensor
+int pir1 = 6;
+
+// Initializes the second PIR Sensor
+int pir2 = 5;
+
 // Initializes the first Ultrasonic Sensor
-int ultrasonicEcho1 = 6;
-int ultrasonicTrigger1 = 5;
+int ultrasonicEcho1 = 8;
+int ultrasonicTrigger1 = 7;
 
 // Initializes the second Ultrasonic Sensor
-int ultrasonicEcho2 = 9;
-int ultrasonicTrigger2 = 8;
+int ultrasonicEcho2 = 10;
+int ultrasonicTrigger2 = 9;
 
 // Initializes time variables used in order to make async delay
 long previousTime1 = 0;
@@ -35,6 +41,13 @@ void setup() {
 
   // Sets echo and trigger for the second Ultrassonic Sensor
   pinMode(ultrasonicTrigger2, OUTPUT);
+  pinMode(ultrasonicEcho2, INPUT);
+
+  // Sets echo and trigger for the first PIR Sensor
+  pinMode(pir1, INPUT);
+
+  // Sets echo and trigger for the second PIR Sensor
+  pinMode(pir2, INPUT);
 }
 
 int ultrasonicSensor(int trigger, int echo){
@@ -50,8 +63,10 @@ int ultrasonicSensor(int trigger, int echo){
   return distance;
 }
 
-void ultrasonicNormalMode(int distanceUltrasonic1, int distanceUltrasonic2){
+void ultrasonicNormalMode(){
 
+  int distanceUltrasonic1 = ultrasonicSensor(ultrasonicTrigger1, ultrasonicEcho1);
+  int distanceUltrasonic2 = ultrasonicSensor(ultrasonicTrigger2, ultrasonicEcho2);
   unsigned long currentTime = millis();
 
   // If counter reaches expected time,
@@ -114,7 +129,7 @@ void ultrasonicNormalMode(int distanceUltrasonic1, int distanceUltrasonic2){
   
 }
 
-void ultrasonicUnstoppableMode(){
+void unstoppableMode(){
 
   unsigned long currentTime = millis();
    
@@ -139,16 +154,35 @@ void ultrasonicUnstoppableMode(){
     digitalWrite(greenLedPin, greenLedState);
     digitalWrite(redLedPin, redLedState);
     ultrasonicCounter1++;
-    }
+  }
     
 }
 
-void loop()
-{
-  int distanceUltrasonic1 = ultrasonicSensor(ultrasonicTrigger1, ultrasonicEcho1);
-  int distanceUltrasonic2 = ultrasonicSensor(ultrasonicTrigger2, ultrasonicEcho2);
+void pirNormalMode (){
+
+  int pirSensor1 = digitalRead(pir1);
+  int pirSensor2 = digitalRead(pir2);
+   
+  if(pirSensor1){
+    digitalWrite(greenLedPin, HIGH);
+  }
+  else{
+    digitalWrite(greenLedPin, LOW);
+  }
   
-  ultrasonicNormalMode(distanceUltrasonic1, distanceUltrasonic2);
-  //ultrasonicUnstoppableMode();
+  if(pirSensor2){
+    digitalWrite(redLedPin, HIGH);
+  }
+  else{
+    digitalWrite(redLedPin, LOW);
+  }
+ 
+}
+
+void loop()
+{ 
+  ultrasonicNormalMode();
+  //unstoppableMode();
+  //pirNormalMode();
   
 }
