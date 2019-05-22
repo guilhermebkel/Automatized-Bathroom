@@ -7,6 +7,7 @@ int greenLedState = LOW;
 int minDistance = 25; // Minimum distance for action - in centimeters
 int delayBeforeActivation = 9; // Delay for activation - in seconds
 int timeBetweenActivation = 5; // Time between activations on Unstoppable Mode - in seconds
+int flushDuration = 5; // Flush action duration - in seconds
 
 // Initializes the first Ultrasonic Sensor
 int ultrasonicEcho1 = 6;
@@ -62,7 +63,7 @@ void loop()
     // makes the expected action.
     if(ultrasonicCounter1 == delayBeforeActivation){
       digitalWrite(greenLedPin, HIGH);
-      if (currentTime - previousTime1 > 5000) { 
+      if (currentTime - previousTime1 > 1000*flushDuration) { 
         ultrasonicCounter1 = 0;
         digitalWrite(greenLedPin, LOW);
       }
@@ -91,7 +92,7 @@ void loop()
     // makes the expected action.
     if(ultrasonicCounter2 == delayBeforeActivation){
       digitalWrite(redLedPin, HIGH);
-      if (currentTime - previousTime2 > 5000) { 
+      if (currentTime - previousTime2 > 1000*flushDuration) { 
         ultrasonicCounter2 = 0;
         digitalWrite(redLedPin, LOW);
       }
