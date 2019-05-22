@@ -5,8 +5,7 @@ int greenLedPin = 11;
 int greenLedState = LOW;
 
 int minDistance = 25; // Minimum distance for action - in centimeters
-int delayBeforeActivation = 9; // Delay for activation - in seconds
-int timeBetweenActivation = 5; // Time between activations on Unstoppable Mode - in seconds
+int delayBeforeActivation = 15; // Delay for activation - in seconds
 int flushDuration = 5; // Flush action duration - in seconds
 
 // Initializes the first Ultrasonic Sensor
@@ -51,13 +50,10 @@ int ultrasonicSensor(int trigger, int echo){
   return distance;
 }
 
-void loop()
-{
+void ultrasonicNormalMode(int distanceUltrasonic1, int distanceUltrasonic2){
+
   unsigned long currentTime = millis();
-  
-  int distanceUltrasonic1 = ultrasonicSensor(ultrasonicTrigger1, ultrasonicEcho1);
-  int distanceUltrasonic2 = ultrasonicSensor(ultrasonicTrigger2, ultrasonicEcho2);
-  
+
   if(distanceUltrasonic1 < minDistance){
     // If counter reaches expected time,
     // makes the expected action.
@@ -115,7 +111,44 @@ void loop()
     digitalWrite(redLedPin, LOW);
     ultrasonicCounter2 = 0;
   }
+  
+}
 
-  //ultrasonicSensorUnstoppable(redLed, greenLed, delayBeforeActivation, timeBetweenActivation);
+void ultrasonicUnstoppableMode(){
+
+  unsigned long currentTime = millis();
+   
+  if(ultrasonicCounter1 == delayBeforeActivation){
+    digitalWrite(greenLedPin, HIGH);
+    digitalWrite(redLedPin, HIGH);
+    if (currentTime - previousTime1 > 1000*flushDuration) { 
+      ultrasonicCounter1 = 0;
+      digitalWrite(greenLedPin, LOW);
+      digitalWrite(redLedPin, LOW);
+    }
+  }
+  else if (currentTime - previousTime1 > 500) { 
+    previousTime1 = currentTime;
+    if (greenLedState == LOW && redLedState == LOW) {
+      greenLedState = HIGH;
+      redLedState = HIGH;
+    } else {
+      greenLedState = LOW;
+      redLedState = LOW;
+    }
+    digitalWrite(greenLedPin, greenLedState);
+    digitalWrite(redLedPin, redLedState);
+    ultrasonicCounter1++;
+    }
+    
+}
+
+void loop()
+{
+  int distanceUltrasonic1 = ultrasonicSensor(ultrasonicTrigger1, ultrasonicEcho1);
+  int distanceUltrasonic2 = ultrasonicSensor(ultrasonicTrigger2, ultrasonicEcho2);
+  
+  ultrasonicNormalMode(distanceUltrasonic1, distanceUltrasonic2);
+  //ultrasonicUnstoppableMode();
   
 }
