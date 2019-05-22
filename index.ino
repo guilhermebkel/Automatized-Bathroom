@@ -54,18 +54,18 @@ void ultrasonicNormalMode(int distanceUltrasonic1, int distanceUltrasonic2){
 
   unsigned long currentTime = millis();
 
-  if(distanceUltrasonic1 < minDistance){
-    // If counter reaches expected time,
-    // makes the expected action.
-    if(ultrasonicCounter1 == delayBeforeActivation){
-      digitalWrite(greenLedPin, HIGH);
-      if (currentTime - previousTime1 > 1000*flushDuration) { 
-        ultrasonicCounter1 = 0;
-        digitalWrite(greenLedPin, LOW);
-      }
+  // If counter reaches expected time,
+  // makes the expected action.
+  if(ultrasonicCounter1 == delayBeforeActivation){
+    digitalWrite(greenLedPin, HIGH);
+    if (currentTime - previousTime1 > 1000*flushDuration) { 
+      ultrasonicCounter1 = 0;
+      digitalWrite(greenLedPin, LOW);
     }
+  }
+  else if(distanceUltrasonic1 < minDistance){
     // Counting before making an action.
-    else if (currentTime - previousTime1 > 500) { 
+    if (currentTime - previousTime1 > 500) { 
       previousTime1 = currentTime;
       if (greenLedState == LOW) {
         greenLedState = HIGH;
@@ -83,18 +83,18 @@ void ultrasonicNormalMode(int distanceUltrasonic1, int distanceUltrasonic2){
     ultrasonicCounter1 = 0;
   }
 
-  if(distanceUltrasonic2 < minDistance){
-    // If counter reaches expected time,
-    // makes the expected action.
-    if(ultrasonicCounter2 == delayBeforeActivation){
-      digitalWrite(redLedPin, HIGH);
-      if (currentTime - previousTime2 > 1000*flushDuration) { 
-        ultrasonicCounter2 = 0;
-        digitalWrite(redLedPin, LOW);
-      }
+  // If counter reaches expected time,
+  // makes the expected action.
+  if(ultrasonicCounter2 == delayBeforeActivation){
+    digitalWrite(redLedPin, HIGH);
+    if (currentTime - previousTime2 > 1000*flushDuration) { 
+      ultrasonicCounter2 = 0;
+      digitalWrite(redLedPin, LOW);
     }
+  }
+  else if(distanceUltrasonic2 < minDistance){
     // Counting before making an action.
-    else if (currentTime - previousTime2 > 500) { 
+    if (currentTime - previousTime2 > 500) { 
       previousTime2 = currentTime;
       if (redLedState == LOW) {
         redLedState = HIGH;
