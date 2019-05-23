@@ -170,6 +170,7 @@ void ultrasonicInvertedMode(){
     // If sensor stop reading the required signal,
     // resets to initial state.
     digitalWrite(greenLedPin, LOW);
+    ultrasonicCounter1 = 0;
   }
 
   // If counter reaches expected time,
@@ -203,6 +204,7 @@ void ultrasonicInvertedMode(){
     // If sensor stop reading the required signal,
     // resets to initial state.
     digitalWrite(redLedPin, LOW);
+    ultrasonicCounter2 = 0;
   }
   
 }
@@ -259,8 +261,8 @@ void pirNormalMode (){
 
 void loop()
 { 
-  ultrasonicNormalMode();
-  //ultrasonicInvertedMode();
+  //ultrasonicNormalMode();
+  ultrasonicInvertedMode();
   //pirNormalMode();
   //unstoppableMode(); 
 }
