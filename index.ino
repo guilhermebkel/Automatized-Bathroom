@@ -1,5 +1,5 @@
 int minDistance = 25; // Minimum distance for action - in centimeters
-int delayBeforeActivation = 15; // Delay for activation - in seconds
+int delayBeforeActivation = 10; // Delay for activation - in seconds
 int flushDuration = 5; // Flush action duration - in seconds
 
 // Initializes leds
@@ -25,8 +25,12 @@ int ultrasonicTrigger2 = 9;
 // Initializes time variables used in order to make async delay
 long previousTime1 = 0;
 long previousTime2 = 0;
+long previousTime3 = 0;
+long previousTime4 = 0;
 int ultrasonicCounter1 = 0;
 int ultrasonicCounter2 = 0;
+int ultrasonicState1 = 0;
+int ultrasonicState2 = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -129,6 +133,80 @@ void ultrasonicNormalMode(){
   
 }
 
+void ultrasonicInvertedMode(){
+
+  int distanceUltrasonic1 = ultrasonicSensor(ultrasonicTrigger1, ultrasonicEcho1);
+  int distanceUltrasonic2 = ultrasonicSensor(ultrasonicTrigger2, ultrasonicEcho2);
+  unsigned long currentTime = millis();
+
+  // If counter reaches expected time,
+  // makes the expected action.
+  if(ultrasonicCounter1 >= delayBeforeActivation  && distanceUltrasonic1 > minDistance){
+      previousTime3 = currentTime;
+      ultrasonicState1 = 1;
+  }
+  if(ultrasonicCounter1 >= delayBeforeActivation && ultrasonicState1){
+    digitalWrite(greenLedPin, HIGH);
+    if (currentTime - previousTime1 > 1000*flushDuration) { 
+      ultrasonicCounter1 = 0;
+      ultrasonicState1 = 0;
+      digitalWrite(greenLedPin, LOW);
+    }
+  }
+  else if(distanceUltrasonic1 < minDistance){
+    // Counting before making an action.
+    if(currentTime - previousTime1 > 500) { 
+      previousTime1 = currentTime;
+      if (greenLedState == LOW) {
+        greenLedState = HIGH;
+      } else {
+        greenLedState = LOW;
+      }
+      digitalWrite(greenLedPin, greenLedState);
+      ultrasonicCounter1++;
+    }
+  }
+  else{
+    // If sensor stop reading the required signal,
+    // resets to initial state.
+    digitalWrite(greenLedPin, LOW);
+  }
+
+  // If counter reaches expected time,
+  // makes the expected action.
+  if(ultrasonicCounter2 >= delayBeforeActivation && distanceUltrasonic2 > minDistance){
+      previousTime4 = currentTime;
+      ultrasonicState2 = 1;
+  }
+  if(ultrasonicCounter2 >= delayBeforeActivation && ultrasonicState2){
+    digitalWrite(redLedPin, HIGH);
+    if (currentTime - previousTime2 > 1000*flushDuration) { 
+      ultrasonicCounter2 = 0;
+      ultrasonicState2 = 0;
+      digitalWrite(redLedPin, LOW);
+    }
+  }
+  else if(distanceUltrasonic2 < minDistance){
+    // Counting before making an action.
+    if (currentTime - previousTime2 > 500) { 
+      previousTime2 = currentTime;
+      if (redLedState == LOW) {
+        redLedState = HIGH;
+      } else {
+        redLedState = LOW;
+      }
+      digitalWrite(redLedPin, redLedState);
+      ultrasonicCounter2++;
+    }
+  }
+  else{
+    // If sensor stop reading the required signal,
+    // resets to initial state.
+    digitalWrite(redLedPin, LOW);
+  }
+  
+}
+
 void unstoppableMode(){
 
   unsigned long currentTime = millis();
@@ -182,7 +260,7 @@ void pirNormalMode (){
 void loop()
 { 
   ultrasonicNormalMode();
-  //unstoppableMode();
+  //ultrasonicInvertedMode();
   //pirNormalMode();
-  
+  //unstoppableMode(); 
 }
